@@ -155,8 +155,6 @@
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Phone Number</th>
-                                <th>Address</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -166,13 +164,11 @@
                                     <td>{{ $user->id }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
-                                    <td>{{ $user->phone_number }}</td>
-                                    <td>{{ $user->address }}</td>
                                     <td class="btn-group">
                                         <div class="row">
                                             <div class="col-sm d-flex align-items-center">
                                                 <button class="btn btn-sm btn-primary btn-block mb-2"
-                                                    onclick="showUserDetails({{ $user->id }})">
+                                                    onclick="showUserDetails({{ $user->id }}, '{{ $user->name }}', '{{ $user->email }}')">
                                                     <i class="fas fa-edit"></i> Show
                                                 </button>
                                             </div>
@@ -213,60 +209,15 @@
         </div>
     </div>
 
-    <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="showModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="showModalLabel">User Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Update Modal -->
-    <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="updateModalLabel">Update User</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Delete Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Delete User</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to delete this user?</p>
-                </div>
-                <div class="modal-footer">
-                    <form id="deleteForm" action="{{ route('delete_user', ['id' => $user->id]) }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    @include('modals.showUserModal')
+    @include('modals.deleteUserModal')
 
     <!-- jQuery -->
     <script src="plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->
     <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="dist/js/adminlte.js"></script>
     <script>
         document.getElementById("searchButton").addEventListener("click", function() {
             var searchText = document.getElementById("searchInput").value.toLowerCase();
@@ -294,26 +245,39 @@
         });
     </script>
     <script>
-        \
-        function showUserDetails(userId) {
-            document.getElementById('showModal').querySelector('.modal-body').innerHTML =
-                'User details for user with ID: ' + userId;
-            $('#showModal').modal('show');
+        function showUserDetails(userId, userName, userEmail) {
+            $('#myModalShowUser #userName').text(userName);
+            $('#myModalShowUser #userEmail').text(userEmail);
+            $('#myModalShowUser').modal('show');
         }
 
         function updateUserDetails(userId) {
-            document.getElementById('updateModal').querySelector('.modal-body').innerHTML =
-                'Update form for user with ID: ' + userId;
-            $('#updateModal').modal('show');
+            window.location.href = `/profile/${userId}`;
         }
 
         function deleteUser(userId) {
-            document.getElementById('deleteForm').setAttribute('action', '/delete-user/' + userId);
-            $('#deleteModal').modal('show');
+            function deleteUser(userId) {
+                if (confirm("Are you sure you want to delete this user?")) {
+                    fetch(`/users/${userId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            location.reload();
+                        })
+                        .catch(error => {
+                            console.error('There was a problem with the fetch operation:', error);
+                        });
+                }
+            }
         }
     </script>
-    <!-- AdminLTE App -->
-    <script src="dist/js/adminlte.js"></script>
 </body>
 
 </html>
