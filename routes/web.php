@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthManager;
+use App\Http\Controllers\AreaChartController;
 
 
 /*
@@ -20,9 +21,10 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/dashboard', [AuthManager::class, 'dashboard'])->name('dashboard');
-Route::get('/gestionVoiture', function () {
-    return view('gestionVoiture');
-})->middleware('auth');
+Route::get('/gestion-voiture', [AuthManager::class, 'gestionVoiture'])->name('gestionVoiture')->middleware('auth');
+Route::get('/gestion-clients', [AuthManager::class, 'gestionClients'])->name('gestionClients')->middleware('auth');
+Route::get('/gestion-charts', [AuthManager::class, 'gestionCharts'])->name('gestionCharts')->middleware('auth');
+
 
 
 Route::get('/login', [AuthManager::class, 'login'])->name('login');

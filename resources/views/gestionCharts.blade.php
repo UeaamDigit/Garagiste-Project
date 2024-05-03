@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Tempusdominus Bootstrap 4 -->
     <link rel="stylesheet" href="plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- iCheck -->
     <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
     <!-- JQVMap -->
@@ -27,6 +28,9 @@
     <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
     <!-- summernote -->
     <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
+    <!-- Chart Link-->>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         .search-container {
             text-align: center;
@@ -117,7 +121,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('gestionCharts') }}" class="nav-link">
+                            <a href="" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
                                     Gestion de Charts
@@ -134,45 +138,40 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0"> Gestion de Voitures</h1>
+                            <h1 class="m-0"> Gestion de Charts</h1>
                         </div><!-- /.col -->
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                                <li class="breadcrumb-item active">Table</li>
+                                <li class="breadcrumb-item active">Charts</li>
                             </ol>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="container mt-5">
-                <div class="search-container mb-3">
-                    <input id="searchInput" type="text" class="form-control w-50 d-inline"
-                        placeholder="Search...">
-
-                    <button id="searchButton" class="btn btn-warning">Search</button>
-                </div>
-                <div class="text-center mb-3">
-                    <a href="{{ route('registration') }}" class="btn btn-success">Create a User </a>
-                </div>
-
-                <div class="card-body">
-
+                <div class="row">
+                    <div class="col-md-6">
+                        <canvas id="scatterChart"></canvas>
+                    </div>
+                    <div class="col-md-6">
+                        <canvas id="areaChart"></canvas>
+                    </div>
                 </div>
 
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                        </li>
-                    </ul>
-                </nav>
+                <!-- Second row of charts -->
+                <div class="row mt-5">
+                    <div class="col-md-6">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                    <div class="col-md-6">
+                        <canvas id="lineChart"></canvas>
+                    </div>
+                </div>
+                <br><br><br>
+                <div class=" mt-5 m-auto" style="width: 70%">
+                    <canvas id="doughnutChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -245,6 +244,160 @@
                 }
             }
         }
+    </script>
+    <script>
+        var ctx = document.getElementById('doughnutChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [12, 19, 3, 5, 2, 3],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+    <script>
+        var ctx = document.getElementById('areaChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @json($data['labels']),
+                datasets: [{
+                    label: 'Data',
+                    data: @json($data['data']),
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: true
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+    <script>
+        var ctx = document.getElementById('barChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                datasets: [{
+                    label: 'Sales',
+                    data: [50, 60, 70, 65, 75, 80, 85],
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+    <script>
+        var ctx = document.getElementById('scatterChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Scatter Dataset',
+                    data: [{
+                        x: 1,
+                        y: -1
+                    }, {
+                        x: 2,
+                        y: 3
+                    }, {
+                        x: 3,
+                        y: -2
+                    }, {
+                        x: 4,
+                        y: 4
+                    }, {
+                        x: 5,
+                        y: 0
+                    }],
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom'
+                    },
+                    y: {
+                        type: 'linear',
+                        position: 'left'
+                    }
+                }
+            }
+        });
+    </script>
+    <script>
+        var ctx = document.getElementById('lineChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                datasets: [{
+                    label: 'Temperature',
+                    data: [10, 15, 20, 25, 30, 35, 40],
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
     </script>
 </body>
 

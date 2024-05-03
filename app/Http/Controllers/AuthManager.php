@@ -61,6 +61,22 @@ class AuthManager extends Controller
         return view('gestionVoiture');
     }
 
+    public function gestionClients()
+    {
+        return view('dashboard');
+    }
+
+    public function gestionCharts()
+    {
+        $data = [
+            'labels' => ['January', 'February', 'March', 'April', 'May'],
+            'data' => [65, 59, 80, 81, 56],
+        ];
+
+        return view('gestionCharts', compact('data'));
+    }
+
+
     /*function loginPost(Request $request)
     {
         $request->validate([
