@@ -2,7 +2,7 @@
 @section('title', 'Registration ')
 @section('content')
     <div class="container">
-        <h1 class="text-center mt-5 alert alert-danger w-25 m-auto">Registration</h1>
+        <h1 class="text-center mt-5 alert alert-danger w-25 m-auto">Create User</h1>
         <div class="mt-5">
             @if ($errors->any())
                 <div class="col-12">

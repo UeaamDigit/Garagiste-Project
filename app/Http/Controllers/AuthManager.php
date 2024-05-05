@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
+use PDF;
 
 class AuthManager extends Controller
 {
@@ -27,6 +28,12 @@ class AuthManager extends Controller
             return redirect(route('home'));
         }
         return view('registration');
+    }
+
+    function createUser()
+    {
+
+        return view('createUser');
     }
     public function profile()
     {
@@ -53,6 +60,8 @@ class AuthManager extends Controller
 
         return redirect()->route('profile')->with('success', 'Profile updated successfully');
     }
+
+
     /**
      * @Route("/gestion-voiture", name="gestionVoiture")
      */
@@ -183,5 +192,25 @@ class AuthManager extends Controller
 
         // Redirect back to the dashboard with a success message
         return redirect()->route('dashboard')->with('success', 'User deleted successfully');
+    }
+
+    public function export_user_pdf()
+    {
+        try {
+            // Fetch all user
+            $users = User::all();
+
+            if ($users->isEmpty()) {
+                return redirect()->back()->with('error', 'No user found to export.');
+            }
+
+            $pdf = PDF::loadView('pdf.document', [
+                'user' => $users
+            ]);
+
+            return $pdf->download('document.pdf');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error exporting user: ' . $e->getMessage());
+        }
     }
 }

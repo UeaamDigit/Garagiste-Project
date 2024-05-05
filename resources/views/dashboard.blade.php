@@ -1,3 +1,6 @@
+<?php
+use Illuminate\Support\Facades\Auth;
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -133,10 +136,15 @@
             <div class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
-                        <div class="col-sm-6">
+                        <div class="col-sm-4">
                             <h1 class="m-0">Dashboard</h1>
                         </div><!-- /.col -->
-                        <div class="col-sm-6">
+                        <div class="col-sm-4">
+                            <a href="" class="btn btn-success">Import Excel</a>
+                            <a href="{{ route('export_user_pdf') }}" class="btn btn-danger">Import PDF</a>
+
+                        </div>
+                        <div class="col-sm-4">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
                                 <li class="breadcrumb-item active">Table</li>
@@ -150,20 +158,19 @@
                     <input id="searchInput" type="text" class="form-control w-50 d-inline"
                         placeholder="Search...">
 
-                    <button id="searchButton" class="btn btn-warning">Search</button>
-                </div>
-                <div class="text-center mb-3">
-                    <a href="{{ route('registration') }}" class="btn btn-success">Create a User </a>
+                    <button id="searchButton" class="btn btn-warning"> <i class="fas fa-search"></i></button>
+                    <a href="{{ route('createUser') }}" class="btn btn-info">+ Create a User </a>
                 </div>
 
+
                 <div class="card-body">
-                    <table class="table table-bordered table-hover">
+                    <table class="table table-bordered table-hover bg-white">
                         <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Actions</th>
+                                <th class="text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -172,19 +179,18 @@
                                     <td>{{ $user->id }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
-                                    <td class="btn-group">
-                                        <div class="row">
+                                    <td>
+                                        <div class="row w-75 mx-auto">
                                             <div class="col-sm d-flex align-items-center">
                                                 <button class="btn btn-sm btn-primary btn-block mb-2"
                                                     onclick="showUserDetails({{ $user->id }}, '{{ $user->name }}', '{{ $user->email }}')">
-                                                    <i class="fas fa-edit"></i> Show
+                                                    Show
                                                 </button>
                                             </div>
                                             <div class="col-sm d-flex align-items-center">
-                                                <button class="btn btn-sm btn-success btn-block mb-2"
-                                                    onclick="updateUserDetails({{ $user->id }})">
-                                                    <i class="fas fa-sync"></i> Update
-                                                </button>
+                                                <a href="{{ route('updateUser') }}"
+                                                    class="btn btn-sm btn-success btn-block mb-2"><i
+                                                        class="fas fa-edit"></i> Update</a>
                                             </div>
                                             <div class="col-sm d-flex align-items-center">
                                                 <button class="btn btn-sm btn-danger btn-block mb-2"
@@ -213,6 +219,7 @@
                         </li>
                     </ul>
                 </nav>
+
             </div>
         </div>
     </div>
@@ -253,37 +260,38 @@
         });
     </script>
     <script>
-        function showUserDetails(userId, userName, userEmail) {
-            $('#myModalShowUser #userName').text(userName);
-            $('#myModalShowUser #userEmail').text(userEmail);
-            $('#myModalShowUser').modal('show');
-        }
-
-        function updateUserDetails(userId) {
-            window.location.href = `/profile/${userId}`;
-        }
-
+        // Function to delete a user
         function deleteUser(userId) {
-            function deleteUser(userId) {
-                if (confirm("Are you sure you want to delete this user?")) {
-                    fetch(`/users/${userId}`, {
-                            method: 'DELETE',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            location.reload();
-                        })
-                        .catch(error => {
-                            console.error('There was a problem with the fetch operation:', error);
-                        });
-                }
+            if (confirm("Are you sure you want to delete this user?")) {
+                fetch(`/users/${userId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        location.reload();
+                    })
+                    .catch(error => {
+                        console.error('There was a problem with the fetch operation:', error);
+                    });
             }
+        }
+    </script>
+
+    <script>
+        function showUserDetails(userId, userName, userEmail) {
+            // Update modal content with user details
+            document.getElementById("userName").innerText = userName;
+            document.getElementById("userEmail").innerText = userEmail;
+
+            // Show the modal
+            var myModal = new bootstrap.Modal(document.getElementById('myModalShowUser'));
+            myModal.show();
         }
     </script>
 </body>

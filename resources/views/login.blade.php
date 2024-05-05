@@ -2,8 +2,8 @@
 @section('title', 'Login ')
 @section('content')
     <div class="container">
-        <h1 class="text-center mt-5 alert alert-danger">Login</h1>
-        <div class="mt-5">
+        <h1 class="text-center mt-5 alert alert-danger w-25 m-auto">Login</h1>
+        <div class="mt-5 w-50 m-auto">
             @if ($errors->any())
                 <div class="col-12">
                     @foreach ($errors->all() as $error)
@@ -20,7 +20,7 @@
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
         </div>
-        <form action="{{ route('login.post') }}" method="POST" class="ms-auto me-auto mt-3" style="width: 400px">
+        <form action="{{ route('login.post') }}" method="POST" class="m-auto rounded p-5 shadow-lg" style="width: 400px">
             @csrf
             <div class="mb-3">
                 <label class="form-label">Email address</label>

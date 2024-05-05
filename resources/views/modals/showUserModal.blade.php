@@ -1,8 +1,8 @@
-<div id="myModalShowUser" class="modal">
+<div id="myModalShowUser" class="modal w-50 m-auto ">
     <div class="modal-content">
         <div class="modal-header">
-            <span class="btnCloseShow close">&times;</span>
             <h2>Show User Details</h2>
+            <span class="btnCloseShow close">&times;</span>
         </div>
         <div class="modal-body">
             <div class="row">
@@ -23,7 +23,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button class="btnCloseShow btn bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+            <button class="btnCloseShow btn bg-success  text-white font-bold py-2 px-4 rounded"
                 id="close">Close</button>
         </div>
     </div>

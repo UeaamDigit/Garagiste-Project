@@ -2,7 +2,7 @@
 @section('title', 'Edit Profile')
 @section('content')
     <div class="container">
-        <h1 class="text-center mt-5 alert alert-success">Edit Profile</h1>
+        <h1 class="text-center mt-5 alert alert-success w-25 m-auto">Profile</h1>
         <div class="mt-5">
             @if ($errors->any())
                 <div class="col-12">
@@ -21,7 +21,8 @@
             @endif
         </div>
 
-        <form action="{{ route('profile.update') }}" method="POST" class="ms-auto me-auto mt-3" style="max-width: 400px;">
+        <form action="{{ route('profile.update') }}" method="POST" class="m-auto rounded p-5 shadow-lg" style="width: 400px"
+            style="max-width: 400px;">
             @csrf
             @method('PUT')
             <div class="mb-3">
@@ -34,10 +35,7 @@
                 <input type="email" class="form-control" id="email" name="email" value="{{ auth()->user()->email }}"
                     required>
             </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password" required>
-            </div>
+
 
             <button type="submit" class="btn btn-primary">Update</button>
         </form>

@@ -2,8 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthManager;
-use App\Http\Controllers\AreaChartController;
-
+use App\Http\Controllers\MailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +47,9 @@ Route::delete('/delete-user/{id}', [AuthManager::class, 'deleteUser'])->name('de
 Route::get('form-email', [MailController::class, 'index'])->name('form.email');
 Route::post('/send-mail', [MailController::class, 'sendEmail'])->name('send.email');
 
-Route::post("/saveCookie", [HomeController::class, 'saveCookie'])->name("saveCookie");
-Route::post("/saveSession", [HomeController::class, 'saveSession'])->name("saveSession");
-Route::post("/saveAvatar", [HomeController::class, 'saveAvatar'])->name("saveAvatar");
+
+Route::get('/export_user_pdf', [AuthManager::class, 'export_user_pdf'])->name('export_user_pdf');
+
+Route::view('/update-user', 'updateUser')->name('updateUser');
+
+Route::get('/createUser', [AuthManager::class, 'createUser'])->name('createUser');
