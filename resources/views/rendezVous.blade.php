@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Auth;
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Tempusdominus Bootstrap 4 -->
     <link rel="stylesheet" href="plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- iCheck -->
     <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
     <!-- JQVMap -->
@@ -30,6 +32,9 @@ use Illuminate\Support\Facades\Auth;
     <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
     <!-- summernote -->
     <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
+    <!-- Chart Link-->>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         .search-container {
             text-align: center;
@@ -103,7 +108,7 @@ use Illuminate\Support\Facades\Auth;
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                         <li class="nav-item menu-open">
-                            <a href="#" class="nav-link active">
+                            <a href="{{ route('gestionClients') }}" class="nav-link active">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     Gestion de Clients
@@ -120,7 +125,7 @@ use Illuminate\Support\Facades\Auth;
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('gestionCharts') }}" class="nav-link">
+                            <a href="" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
                                     Gestion de Charts
@@ -136,76 +141,52 @@ use Illuminate\Support\Facades\Auth;
             <div class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
-                        <div class="col-sm-4">
-                            <h1 class="m-0">Dashboard</h1>
+                        <div class="col-sm-6">
+                            <h1 class="m-0"> Demande de Rendez-Vous</h1>
                         </div><!-- /.col -->
-                        <div class="col-sm-4">
-                            <a href="" class="btn btn-success">Import Excel</a>
-                            <a href="{{ route('export_user_pdf') }}" class="btn btn-danger">Import PDF</a>
-
-                        </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                                <li class="breadcrumb-item active">Table</li>
+                                <li class="breadcrumb-item active">Redez-Vous</li>
                             </ol>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="container mt-5">
-                <div class="search-container mb-3">
-                    <input id="searchInput" type="text" class="form-control w-50 d-inline"
-                        placeholder="Search...">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">Demande de Rendez-vous</div>
 
-                    <button id="searchButton" class="btn btn-warning"> <i class="fas fa-search"></i></button>
-                    <a href="{{ route('createCar') }}" class="btn btn-info">+ Create Car </a>
+                        <div class="card-body">
+                            <form method="POST" action="{{ route('appointments.store') }}">
+                                @csrf
+
+                                <div class="form-group">
+                                    <label for="vehicle_id">Véhicule</label>
+                                    <select id="vehicle_id" class="form-control" name="vehicle_id">
+                                        @foreach ($vehicles as $vehicle)
+                                            <option value="{{ $vehicle->id }}">{{ $vehicle->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="requested_datetime">Date et Heure souhaitées</label>
+                                    <input id="requested_datetime" type="datetime-local" class="form-control"
+                                        name="requested_datetime">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="vehicle_condition">État Extérieur du Véhicule</label>
+                                    <textarea id="vehicle_condition" class="form-control" name="vehicle_condition" rows="3"></textarea>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Soumettre</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-
-
-                <div class="card-body">
-                    <table class="table table-bordered table-hover bg-white">
-                        <thead>
-                            <tr>
-                                <th>Brand</th>
-                                <th>Model</th>
-                                <th>Type</th>
-                                <th>Registration Number</th>
-                                <th>Photo</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($cars as $car)
-                                <tr>
-                                    <td>{{ $car->brand }}</td>
-                                    <td>{{ $car->model }}</td>
-                                    <td>{{ $car->type }}</td>
-                                    <td>{{ $car->registration_number }}</td>
-                                    <td style="text-align: center">
-                                        <img src="{{ asset($car->photo) }}" alt="Car" width="150"
-                                            height="70">
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-
-                    </table>
-                </div>
-
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                        </li>
-                    </ul>
-                </nav>
-
             </div>
         </div>
     </div>
@@ -245,41 +226,11 @@ use Illuminate\Support\Facades\Auth;
             });
         });
     </script>
-    <script>
-        // Function to delete a user
-        function deleteUser(userId) {
-            if (confirm("Are you sure you want to delete this user?")) {
-                fetch(`/users/${userId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        location.reload();
-                    })
-                    .catch(error => {
-                        console.error('There was a problem with the fetch operation:', error);
-                    });
-            }
-        }
-    </script>
 
-    <script>
-        function showUserDetails(userId, userName, userEmail) {
-            // Update modal content with user details
-            document.getElementById("userName").innerText = userName;
-            document.getElementById("userEmail").innerText = userEmail;
 
-            // Show the modal
-            var myModal = new bootstrap.Modal(document.getElementById('myModalShowUser'));
-            myModal.show();
-        }
-    </script>
+
+
+
 </body>
 
 </html>

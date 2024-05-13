@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
+use App\Models\Car;
 use PDF;
 
 class AuthManager extends Controller
@@ -34,6 +35,11 @@ class AuthManager extends Controller
     {
 
         return view('createUser');
+    }
+    function createCar()
+    {
+
+        return view('ajouterVoiture');
     }
     public function profile()
     {
@@ -83,6 +89,19 @@ class AuthManager extends Controller
         ];
 
         return view('gestionCharts', compact('data'));
+    }
+    public function gestionReparations()
+    {
+        return view('gestionReparation');
+    }
+    public function gestionInvoice()
+    {
+        return view('gestionInvoice');
+    }
+
+    public function rendezVous()
+    {
+        return view('rendezVous');
     }
 
 
@@ -179,18 +198,14 @@ class AuthManager extends Controller
 
     public function deleteUser(Request $request, $id)
     {
-        // Find the user by ID
         $user = User::find($id);
 
-        // Check if the user exists
         if (!$user) {
             return redirect()->route('dashboard')->with('error', 'User not found');
         }
 
-        // Delete the user
         $user->delete();
 
-        // Redirect back to the dashboard with a success message
         return redirect()->route('dashboard')->with('success', 'User deleted successfully');
     }
 
@@ -212,5 +227,20 @@ class AuthManager extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error exporting user: ' . $e->getMessage());
         }
+    }
+
+
+
+    public function addCar(Request $request)
+    {
+        $car = new Car();
+        $car->brand = $request->input('marque');
+        $car->model = $request->input('modele');
+        $car->type = $request->input('carburant');
+        $car->registration_number = $request->input('immatriculation');
+        $car->photo = $request->input('photo');
+        $car->save();
+
+        return redirect()->route('gestionVoiture')->with('success', 'Car added successfully.');
     }
 }

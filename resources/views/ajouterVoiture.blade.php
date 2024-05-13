@@ -103,7 +103,7 @@ use Illuminate\Support\Facades\Auth;
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                         <li class="nav-item menu-open">
-                            <a href="#" class="nav-link active">
+                            <a href="{{ route('gestionClients') }}" class="nav-link active">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     Gestion de Clients
@@ -136,15 +136,10 @@ use Illuminate\Support\Facades\Auth;
             <div class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
-                        <div class="col-sm-4">
-                            <h1 class="m-0">Dashboard</h1>
+                        <div class="col-sm-6">
+                            <h1 class="m-0"> Gestion de Voitures</h1>
                         </div><!-- /.col -->
-                        <div class="col-sm-4">
-                            <a href="" class="btn btn-success">Import Excel</a>
-                            <a href="{{ route('export_user_pdf') }}" class="btn btn-danger">Import PDF</a>
-
-                        </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
                                 <li class="breadcrumb-item active">Table</li>
@@ -154,57 +149,88 @@ use Illuminate\Support\Facades\Auth;
                 </div>
             </div>
             <div class="container mt-5">
-                <div class="search-container mb-3">
-                    <input id="searchInput" type="text" class="form-control w-50 d-inline"
-                        placeholder="Search...">
-
-                    <button id="searchButton" class="btn btn-warning"> <i class="fas fa-search"></i></button>
-                    <a href="{{ route('createCar') }}" class="btn btn-info">+ Create Car </a>
-                </div>
 
 
                 <div class="card-body">
-                    <table class="table table-bordered table-hover bg-white">
-                        <thead>
-                            <tr>
-                                <th>Brand</th>
-                                <th>Model</th>
-                                <th>Type</th>
-                                <th>Registration Number</th>
-                                <th>Photo</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($cars as $car)
-                                <tr>
-                                    <td>{{ $car->brand }}</td>
-                                    <td>{{ $car->model }}</td>
-                                    <td>{{ $car->type }}</td>
-                                    <td>{{ $car->registration_number }}</td>
-                                    <td style="text-align: center">
-                                        <img src="{{ asset($car->photo) }}" alt="Car" width="150"
-                                            height="70">
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header">{{ __('Gestion des Véhicules par Client') }}</div>
 
-                    </table>
+                                    <div class="card-body">
+                                        <form method="POST" action="{{ route('addCar') }}">
+                                            @csrf
+
+                                            <div class="form-group row">
+                                                <label for="marque"
+                                                    class="col-md-4 col-form-label text-md-right">{{ __('Marque du véhicule') }}</label>
+
+                                                <div class="col-md-6">
+                                                    <input id="marque" type="text" class="form-control"
+                                                        name="marque" required autofocus>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label for="modele"
+                                                    class="col-md-4 col-form-label text-md-right">{{ __('Modèle du véhicule') }}</label>
+
+                                                <div class="col-md-6">
+                                                    <input id="modele" type="text" class="form-control"
+                                                        name="modele" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label for="carburant"
+                                                    class="col-md-4 col-form-label text-md-right">{{ __('Type de carburant') }}</label>
+
+                                                <div class="col-md-6">
+                                                    <select id="carburant" class="form-control" name="carburant"
+                                                        required>
+                                                        <option value="essence">{{ __('Essence') }}</option>
+                                                        <option value="diesel">{{ __('Diesel') }}</option>
+                                                        <option value="hybride">{{ __('Hybride') }}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label for="immatriculation"
+                                                    class="col-md-4 col-form-label text-md-right">{{ __('Numéro d\'immatriculation') }}</label>
+
+                                                <div class="col-md-6">
+                                                    <input id="immatriculation" type="text" class="form-control"
+                                                        name="immatriculation" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label for="photos"
+                                                    class="col-md-4 col-form-label text-md-right">{{ __('Photos du véhicule') }}</label>
+
+                                                <div class="col-md-6">
+                                                    <input id="photos" type="file" class="form-control"
+                                                        name="photos[]" multiple required>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-0">
+                                                <div class="col-md-6 offset-md-4">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        {{ __('Ajouter') }}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                        </li>
-                    </ul>
-                </nav>
 
             </div>
         </div>
@@ -219,67 +245,8 @@ use Illuminate\Support\Facades\Auth;
     <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="dist/js/adminlte.js"></script>
-    <script>
-        document.getElementById("searchButton").addEventListener("click", function() {
-            var searchText = document.getElementById("searchInput").value.toLowerCase();
 
-            var rows = document.querySelectorAll("tbody tr");
 
-            rows.forEach(function(row) {
-                var cells = row.querySelectorAll("td");
-
-                var matchFound = false;
-
-                cells.forEach(function(cell) {
-                    if (cell.textContent.toLowerCase().includes(searchText)) {
-                        matchFound = true;
-                        return;
-                    }
-                });
-
-                if (matchFound) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
-            });
-        });
-    </script>
-    <script>
-        // Function to delete a user
-        function deleteUser(userId) {
-            if (confirm("Are you sure you want to delete this user?")) {
-                fetch(`/users/${userId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        location.reload();
-                    })
-                    .catch(error => {
-                        console.error('There was a problem with the fetch operation:', error);
-                    });
-            }
-        }
-    </script>
-
-    <script>
-        function showUserDetails(userId, userName, userEmail) {
-            // Update modal content with user details
-            document.getElementById("userName").innerText = userName;
-            document.getElementById("userEmail").innerText = userEmail;
-
-            // Show the modal
-            var myModal = new bootstrap.Modal(document.getElementById('myModalShowUser'));
-            myModal.show();
-        }
-    </script>
 </body>
 
 </html>

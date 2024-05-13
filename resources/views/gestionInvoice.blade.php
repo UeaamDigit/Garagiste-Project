@@ -135,23 +135,6 @@ use Illuminate\Support\Facades\Auth;
                                 </p>
                             </a>
                         </li>
-
-                        <li class="nav-item">
-                            <a href="{{ route('gestionInvoice') }}" class="nav-link">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Facturation
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('gestionInvoice') }}" class="nav-link">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Rendez-vous
-                                </p>
-                            </a>
-                        </li>
                     </ul>
                 </nav>
             </div>
@@ -193,7 +176,7 @@ use Illuminate\Support\Facades\Auth;
                         <div class="col-sm-3">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                                <li class="breadcrumb-item active">Table</li>
+                                <li class="breadcrumb-item active">Facture</li>
                             </ol>
                         </div>
                     </div>
@@ -211,46 +194,42 @@ use Illuminate\Support\Facades\Auth;
 
 
                 <div class="card-body">
-                    <table class="table table-bordered table-hover bg-white">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th class="text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($users as $user)
-                                <tr>
-                                    <td>{{ $user->id }}</td>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $user->email }}</td>
-                                    <td>
-                                        <div class="row w-75 mx-auto">
-                                            <div class="col-sm d-flex align-items-center">
-                                                <button class="btn btn-sm btn-primary btn-block mb-2"
-                                                    onclick="showUserDetails({{ $user->id }}, '{{ $user->name }}', '{{ $user->email }}')">
-                                                    Show
-                                                </button>
-                                            </div>
-                                            <div class="col-sm d-flex align-items-center">
-                                                <a href="{{ route('updateUser') }}"
-                                                    class="btn btn-sm btn-success btn-block mb-2"><i
-                                                        class="fas fa-edit"></i> Update</a>
-                                            </div>
-                                            <div class="col-sm d-flex align-items-center">
-                                                <button class="btn btn-sm btn-danger btn-block mb-2"
-                                                    onclick="deleteUser({{ $user->id }})">
-                                                    <i class="fas fa-trash-alt"></i> Delete
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">Détails de la Facture</div>
+
+                                <div class="card-body">
+                                    <h5>Facture N° {{ $invoice->id }}</h5>
+                                    <p>Date de création: {{ $invoice->created_at }}</p>
+                                    <p>Réparation associée: {{ $invoice->reparation->id }}</p>
+                                    <p>Client: {{ $invoice->client->name }}</p>
+
+                                    <h6>Détails de la Réparation:</h6>
+                                    <ul>
+                                        <li>Statut: {{ $invoice->reparation->status }}</li>
+                                        <!-- Ajoutez d'autres détails de la réparation ici -->
+                                    </ul>
+
+                                    <h6>Pièces de Rechange:</h6>
+                                    <ul>
+                                        @foreach ($invoice->spareParts as $sparePart)
+                                            <li>{{ $sparePart->name }} - {{ $sparePart->price }}</li>
+                                        @endforeach
+                                    </ul>
+
+                                    <h6>Services Supplémentaires:</h6>
+                                    <ul>
+                                        @foreach ($invoice->additionalServices as $service)
+                                            <li>{{ $service->name }} - {{ $service->price }}</li>
+                                        @endforeach
+                                    </ul>
+
+                                    <p>Total: {{ $invoice->total_amount }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <nav aria-label="Page navigation example">
@@ -306,41 +285,9 @@ use Illuminate\Support\Facades\Auth;
             });
         });
     </script>
-    <script>
-        // Function to delete a user
-        function deleteUser(userId) {
-            if (confirm("Are you sure you want to delete this user?")) {
-                fetch(`/users/${userId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        location.reload();
-                    })
-                    .catch(error => {
-                        console.error('There was a problem with the fetch operation:', error);
-                    });
-            }
-        }
-    </script>
 
-    <script>
-        function showUserDetails(userId, userName, userEmail) {
-            // Update modal content with user details
-            document.getElementById("userName").innerText = userName;
-            document.getElementById("userEmail").innerText = userEmail;
 
-            // Show the modal
-            var myModal = new bootstrap.Modal(document.getElementById('myModalShowUser'));
-            myModal.show();
-        }
-    </script>
+
 </body>
 
 </html>

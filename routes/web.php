@@ -23,6 +23,9 @@ Route::get('/dashboard', [AuthManager::class, 'dashboard'])->name('dashboard');
 Route::get('/gestion-voiture', [AuthManager::class, 'gestionVoiture'])->name('gestionVoiture')->middleware('auth');
 Route::get('/gestion-clients', [AuthManager::class, 'gestionClients'])->name('gestionClients')->middleware('auth');
 Route::get('/gestion-charts', [AuthManager::class, 'gestionCharts'])->name('gestionCharts')->middleware('auth');
+Route::get('/gestion-Reparations', [AuthManager::class, 'gestionReparations'])->name('gestionReparations')->middleware('auth');
+Route::get('/gestion-Invoice', [AuthManager::class, 'gestionInvoice'])->name('gestionInvoice')->middleware('auth');
+Route::get('/demande-RendezVous', [AuthManager::class, 'rendezVous'])->name('rendezVous')->middleware('auth');
 
 
 
@@ -53,3 +56,6 @@ Route::get('/export_user_pdf', [AuthManager::class, 'export_user_pdf'])->name('e
 Route::view('/update-user', 'updateUser')->name('updateUser');
 
 Route::get('/createUser', [AuthManager::class, 'createUser'])->name('createUser');
+Route::get('/createCar', [AuthManager::class, 'createCar'])->name('createCar');
+
+Route::post('/add-car', [AuthManager::class, 'addCar'])->name('addCar');
